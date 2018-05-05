@@ -67,6 +67,9 @@
     <!-- </div> -->
     <!-- </nav> -->
     <div class="wrapper">
+        <div class="screen-cover">
+            <div class="loader"></div>
+        </div>
         <div class="parallax filter-gradient appPrimary" data-color="appPrimary">
             <div class="parallax-background">
                 <img class="parallax-background-image" src="assets/img/showcases/showcase-1/bg.png">
@@ -111,9 +114,14 @@
                                         // Fetch all the forms we want to apply custom Bootstrap validation styles to
                                         var modal = document.querySelector('.submit-modal');
                                         var closeButton = document.querySelector('.submit-close-button');
+                                        var loader = document.querySelector('.screen-cover');
 
                                         function toggleModal() {
                                             modal.classList.toggle('submit-show-modal');
+                                        }
+
+                                        function toggleLoader() {
+                                            loader.classList.toggle('show-screen-cover');
                                         }
 
                                         function windowOnClick(event) {
@@ -142,11 +150,18 @@
                                                     event.stopPropagation();
                                                 } else {
                                                     var address = inputs[0].value;
+                                                    toggleLoader();
                                                     fetch('https://47xlssldb5.execute-api.eu-central-1.amazonaws.com/test/sendEmail', {
                                                         method: 'POST', headers: { Accept: 'application/json' }, body: JSON.stringify({ email: address }), mode: 'no-cors'
                                                     })
                                                         .then(function (response) {
-                                                            toggleModal()
+                                                            toggleLoader();
+                                                            toggleModal();
+                                                        })
+                                                        .catch(function (err) {
+                                                            toggleLoader();
+                                                            console.log('Error: ' + err);
+                                                            alert('Something went wrong while adding your email!')
                                                         })
                                                     return
                                                 }
